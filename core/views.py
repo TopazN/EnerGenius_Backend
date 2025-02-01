@@ -3,6 +3,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 User = get_user_model()  # שימוש במודל המותאם אישית
@@ -16,19 +21,17 @@ def add_item(request):
             password = data.get("password")
             full_name = data.get("full_name")
 
-            # אימות נתונים
             if not email or not password or not full_name:
                 return JsonResponse({"status": "error", "message": "Missing fields"}, status=400)
-            try:
-                validate_email(email)
-            except ValidationError:
-                return JsonResponse({"status": "error", "message": "Invalid email"}, status=400)
 
-            # שמירה ב-Database
+            if User.objects.filter(email=email).exists():
+                return JsonResponse({"status": "error", "message": "User already exists"}, status=400)
+
             user = User.objects.create_user(email=email, password=password, full_name=full_name)
-            return JsonResponse({"status": "success", "message": f"User added: {user.full_name}"})
+            return JsonResponse({"status": "success", "message": f"User {email} added"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
 
 
@@ -81,4 +84,39 @@ def delete_item(request):
             return JsonResponse({"status": "success", "message": f"User {email} deleted"})
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            email = data.get("email")
+            password = data.get("password")
+
+            if not email or not password:
+                return JsonResponse({"status": "error", "message": "Missing fields"}, status=400)
+
+            user = authenticate(username=email, password=password)
+
+            if user is not None:
+                login(request, user)
+                return JsonResponse({"status": "success", "message": "Login successful"})
+
+            return JsonResponse({"status": "error", "message": "Invalid credentials"}, status=401)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+@csrf_exempt
+@api_view(['POST'])
+def logout_view(request):
+    if request.method == "POST":
+        logout(request)
+        return JsonResponse({"status": "success", "message": "Logout successful"})
+
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
