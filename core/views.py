@@ -8,7 +8,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics, permissions
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import User
+from .serializers import UserSerializer
+from rest_framework.views import APIView
 import json
+from rest_framework.permissions import IsAuthenticated
+
 
 User = get_user_model()  # שימוש במודל המותאם אישית
 
@@ -120,3 +127,23 @@ def logout_view(request):
         return JsonResponse({"status": "success", "message": "Logout successful"})
 
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user  # מחזיר את המשתמש המחובר
+
+
+class UserCreateView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": "success", "data": serializer.data})
+        return Response({"status": "error", "message": serializer.errors}, status=400)
