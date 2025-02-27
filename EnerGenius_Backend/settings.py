@@ -1,7 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-
+import firebase_admin
+from firebase_admin import credentials, auth
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,7 +14,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Application definition
+# Firebase Authentication
+cred = credentials.Certificate("path/to/firebase-adminsdk.json")
+firebase_admin.initialize_app(cred)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -24,21 +27,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'rest_framework',
-    'drf_yasg',  # הוספה נכונה
+    'drf_yasg',
     'core',
 ]
 
 AUTH_USER_MODEL = 'core.User'
-
+CORS_ALLOW_ALL_ORIGINS = True  # Enable frontend to call API
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'EnerGenius_Backend.urls'
