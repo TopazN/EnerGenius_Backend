@@ -1,8 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-import firebase_admin
-from firebase_admin import credentials, auth
+# import firebase_admin
+# from firebase_admin import credentials, auth
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,8 +15,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Firebase Authentication
-cred = credentials.Certificate("path/to/firebase-adminsdk.json")
-firebase_admin.initialize_app(cred)
+# cred = credentials.Certificate("path/to/firebase-adminsdk.json")
+# firebase_admin.initialize_app(cred)
 
 INSTALLED_APPS = [
     'django.contrib.admin',

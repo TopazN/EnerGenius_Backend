@@ -1,7 +1,6 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-
 from EnerGenius_Backend.views import FirebaseLoginView, UserProfileView
 from core.views_upload import UploadExcelView
 from . import views
@@ -9,6 +8,8 @@ from .views import login_view, logout_view, UserUpdateView, UserCreateView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import path, include  
 from .views_upload import UploadExcelView, PredictConsumptionView
+from .views_upload import AnomalyDetectionView
+
 
 urlpatterns = [
     path('add-item', views.add_item, name='add_item'),
@@ -26,7 +27,8 @@ urlpatterns = [
     path('upload-excel/', UploadExcelView.as_view(), name='upload_excel'),
      path('upload-excel/', UploadExcelView.as_view(), name='upload_excel'),
     path('predict/', PredictConsumptionView.as_view(), name='predict_consumption'),
-    
+    path("detect-anomalies/", AnomalyDetectionView.as_view(), name="detect_anomalies"),
+    path("upload/anomalies/", AnomalyDetectionView.as_view(), name="anomaly_detection"),
 ]
 
 # הוספת קבצי מדיה ב-DEBUG MODE
