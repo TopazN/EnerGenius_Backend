@@ -4,12 +4,46 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from firebase_admin import auth as firebase_auth
 from django.contrib.auth import get_user_model
+from EnerGenius_Backend.models import EnergyConsumption
 from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 from .serializers import UserSerializer
 from django.http import JsonResponse
-
+import pandas as pd
+from .analysis import generate_consumption_analysis
 
 User = get_user_model()
+
+
+class EnergyConsumptionUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        file = request.FILES.get('file')
+        if not file or not file.name.endswith('.xlsx'):
+            return Response({"error": "Please upload a valid Excel file (.xlsx)."}, status=400)
+
+        try:
+            df = pd.read_excel(file)
+
+            required_columns = {'date', 'consumption_kwh'}
+            if not required_columns.issubset(df.columns):
+                return Response({"error": "File missing required columns."}, status=400)
+
+            records = []
+            for _, row in df.iterrows():
+                record = EnergyConsumption(
+                    user=request.user,
+                    date=pd.to_datetime(row['date']).date(),
+                    consumption_kwh=float(row['consumption_kwh'])
+                )
+                records.append(record)
+
+            EnergyConsumption.objects.bulk_create(records, ignore_conflicts=True)
+
+            return Response({"message": "File uploaded successfully."}, status=201)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
 
 class FirebaseLoginView(APIView):
     def post(self, request):
@@ -57,3 +91,11 @@ class UserProfileView(APIView):
             serializer.save()
             return JsonResponse(serializer.data)
         return JsonResponse(serializer.errors, status=400)
+
+class ConsumptionAnalysisView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        forecast = generate_consumption_analysis(request.user)
+        forecast_json = forecast.to_dict(orient='records')
+        return Response({"forecast": forecast_json})

@@ -1,8 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-# import firebase_admin
-# from firebase_admin import credentials, auth
+import firebase_admin
+from firebase_admin import credentials
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,8 +15,12 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Firebase Authentication
-# cred = credentials.Certificate("path/to/firebase-adminsdk.json")
-# firebase_admin.initialize_app(cred)
+cred = credentials.Certificate("path/to/firebase-adminsdk.json")
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'your-firebase-storage-bucket'
+})
+
+ALLOWED_HOSTS = ['localhost', 'your-server-ip']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'core',
+    'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -70,8 +75,12 @@ WSGI_APPLICATION = 'EnerGenius_Backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'energenius_db',
+        'USER': 'your_db_user',
+        'PASSWORD': 'your_db_password',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

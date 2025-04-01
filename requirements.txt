@@ -3,3 +3,8 @@ djangorestframework
 djangorestframework-simplejwt
 firebase-admin
 corsheaders
+pandas
+openpyxl
+prophet
+psycopg2-binary
+django-cors-headers
