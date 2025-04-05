@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from firebase_admin import auth as firebase_auth
 from django.contrib.auth import get_user_model
-from EnerGenius_Backend.models import EnergyConsumption
+from core.models import EnergyConsumption
 from rest_framework_simplejwt.tokens import RefreshToken # type: ignore
 from .serializers import UserSerializer
 from django.http import JsonResponse

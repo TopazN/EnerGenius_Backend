@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from core.models import User, EnergyConsumption
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

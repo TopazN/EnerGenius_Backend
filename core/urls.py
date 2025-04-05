@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from EnerGenius_Backend.views import FirebaseLoginView, UserProfileView
+from core.views import *
 from core.views_upload import UploadExcelView
 from . import views
 from .views import login_view, logout_view, UserUpdateView, UserCreateView
@@ -22,8 +22,8 @@ urlpatterns = [
     path("user/update/", UserUpdateView.as_view(), name="user_update"),
     # הוספת הנתיב ליצירת משתמש חדש
     path("user/create/", UserCreateView.as_view(), name="user_create"),
-    path('firebase-login/', FirebaseLoginView.as_view(), name='firebase_login'),
-    path('user-profile/', UserProfileView.as_view(), name='user_profile'),
+    #path('firebase-login/', FirebaseLoginView.as_view(), name='firebase_login'),
+    #path('user-profile/', UserProfileView.as_view(), name='user_profile'),
     path('upload-excel/', UploadExcelView.as_view(), name='upload_excel'),
      path('upload-excel/', UploadExcelView.as_view(), name='upload_excel'),
     path('predict/', PredictConsumptionView.as_view(), name='predict_consumption'),

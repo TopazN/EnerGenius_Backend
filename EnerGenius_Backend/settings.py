@@ -12,15 +12,15 @@ SECRET_KEY = 'django-insecure-=q%!_b(utlky1s^0i@zot=_iu_sa60jw8^0-f=h4iph)v#j!vk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2']
 
 # Firebase Authentication
-cred = credentials.Certificate("path/to/firebase-adminsdk.json")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+cred = credentials.Certificate(os.path.join(BASE_DIR, "firebase-adminsdk.json"))
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'your-firebase-storage-bucket'
 })
 
-ALLOWED_HOSTS = ['localhost', 'your-server-ip']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,11 +74,11 @@ WSGI_APPLICATION = 'EnerGenius_Backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'energenius_db',
-        'USER': 'your_db_user',
-        'PASSWORD': 'your_db_password',
+        'NAME': 'postgres',         # או כל שם אחר של הדאטהבייס שלך
+        'USER': 'postgres',
+        'PASSWORD': 'Topaz2903',
         'HOST': 'localhost',
         'PORT': '5432',
     }

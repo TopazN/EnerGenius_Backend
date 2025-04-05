@@ -34,3 +34,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class EnergyConsumption(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='consumption_records')
+    date = models.DateField()
+    consumption_kwh = models.FloatField()
+
+    class Meta:
+        unique_together = ('user', 'date')
+
+    def __str__(self):
+        return f"{self.user.email} - {self.date} - {self.consumption_kwh} kWh"
+

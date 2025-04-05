@@ -1,5 +1,5 @@
 import pandas as pd
-from EnerGenius_Backend.models import EnergyConsumption
+from core.models import EnergyConsumption
 from prophet import Prophet
 
 def generate_consumption_analysis(user):

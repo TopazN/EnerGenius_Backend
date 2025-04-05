@@ -2,9 +2,11 @@ django
 djangorestframework
 djangorestframework-simplejwt
 firebase-admin
-corsheaders
+django-cors-headers
 pandas
 openpyxl
 prophet
 psycopg2-binary
 django-cors-headers
+drf-yasg
+
