@@ -73,11 +73,11 @@ WSGI_APPLICATION = 'EnerGenius_Backend.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',         # או כל שם אחר של הדאטהבייס שלך
-        'USER': 'postgres',
-        'PASSWORD': 'Topaz2903',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
