@@ -3,6 +3,8 @@ from datetime import timedelta
 import os
 import firebase_admin
 from firebase_admin import credentials
+from firebase_config import default_app
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,11 +18,6 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.0.2.2']
 
 # Firebase Authentication
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-cred = credentials.Certificate(os.path.join(BASE_DIR, "firebase-adminsdk.json"))
-firebase_admin.initialize_app(cred, {
-    'storageBucket': 'your-firebase-storage-bucket'
-})
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
